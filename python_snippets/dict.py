@@ -3,12 +3,18 @@ def dict_findall(d, k, path=[]):
 
     >>> list(dict_findall({'a': {'a': {'b': 1}, 'b': 2}, 'b': {'b': 4}}, 'b'))
     [['a', 'a'], ['a'], [], ['b']]
+    >>> list(dict_findall({'a': [{'a': {'b': 1}, 'b': 2}]}, 'b'))
+    [['a', 0, 'a'], ['a', 0]]
     '''
-    for _k,v in d.iteritems():
-        if _k == k:
-            yield list(path)
-        if isinstance(v, dict):
+    if isinstance(d, dict):
+        for _k,v in d.iteritems():
+            if _k == k:
+                yield list(path)
             for p in dict_findall(v, k, path+[_k]):
+                yield p
+    elif isinstance(d, list):
+        for i,v in enumerate(d):
+            for p in dict_findall(v, k, path+[i]):
                 yield p
 
 def fark(d, key, search, replace):
