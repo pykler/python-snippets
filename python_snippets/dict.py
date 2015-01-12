@@ -17,6 +17,24 @@ def dict_findall(d, k, path=[]):
             for p in dict_findall(v, k, path+[i]):
                 yield p
 
+def get_key(d, kl):
+    '''
+    given a list of keys ``kl``, loop through them to return the value
+    can be used to grab one of the keys returned by :func:dict_findall
+
+    >>> get_key({'a': [{'a': {'b': 1}, 'b': 2}]}, ['a', 0, 'a'])
+    {'b': 1}
+    >>> get_key({'a': [{'a': {'b': 1}, 'b': 2}]}, ['a', 1, 'a'])
+    Traceback (most recent call last):
+    KeyError: ['a', 1]
+    '''
+    for i,k in enumerate(kl):
+        try:
+            d = d[k]
+        except (KeyError, IndexError):
+            raise KeyError(kl[:i+1])
+    return d
+
 def fark(d, key, search, replace):
     '''
     look for keys in ``d`` that match ``key`` recursively
